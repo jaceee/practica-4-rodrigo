@@ -27,7 +27,7 @@ struct SeleccionDeCanal {
 void setup() {
   // Configurar entradas y salidas
   pinMode(generacionPwm.pin, OUTPUT);
-  pinMode(seleccionCanal.pin, OUTPUT);
+  pinMode(seleccionDeCanal.pin, OUTPUT);
 
   // Iniciar Pwm
   analogWrite(generacionPwm.pin, generacionPwm.valor);
