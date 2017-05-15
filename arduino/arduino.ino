@@ -43,6 +43,7 @@ void loop() {
     break;
 
   case 1:
+    esperarEOC();
     break;
 
   case 2:
@@ -72,6 +73,10 @@ void seleccionarCanal() {
 
 void iniciar() {
 
+}
+
+void esperarEOC() {
+  
 }
 
 void leer() {
