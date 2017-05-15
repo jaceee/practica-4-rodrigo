@@ -32,6 +32,12 @@ struct InicioDeConversion {
   bool estado = false;
 } inicioDeConversion;
 
+// - Lectura EOC
+
+struct LecturaEOC {
+  int pin = 13;
+} lecturaEOC;
+
 
 // Implementación
 
@@ -39,6 +45,8 @@ void setup() {
   // Configurar entradas y salidas
   pinMode(generacionPwm.pin, OUTPUT);
   pinMode(seleccionDeCanal.pin, OUTPUT);
+  pinMode(inicioDeConversion.pin, OUTPUT);
+  pinMode(lecturaEOC.pin, INPUT);
 }
 
 void loop() {
@@ -81,15 +89,28 @@ void seleccionarCanal() {
 }
 
 void iniciar() {
+  long tActual = millis();
+  
+  if (!inicioDeConversion.estado) {
+    inicioDeConversion.millisUltimaEjecucion = tActual;
+    inicioDeConversion.estado = true;
+    digitalWrite(inicioDeConversion.pin, HIGH);
+  } else if (tActual - inicioDeConversion.millisUltimaEjecucion > inicioDeConversion.millisEspera) {
+    inicioDeConversion.estado = false;
+    digitalWrite(inicioDeConversion.pin, LOW);
 
+    estado = 1;
+  }
 }
 
 void esperarEOC() {
-  
+  if (digitalRead(lecturaEOC.pin) == HIGH) {
+    estado = 2;
+  }
 }
 
 void leer() {
-
+  estado = 0;
 }
 
 void mostrar() {
