@@ -9,7 +9,9 @@ int estado = 0;
 
 struct GeneracionPwm {
   int pin = 12;
-  int valor = 127;
+  long millisUltimaEjecucion = 0;
+  long millisEspera = 1;
+  bool estado = false;
 } generacionPwm;
 
 // - Selección de canal
@@ -28,12 +30,10 @@ void setup() {
   // Configurar entradas y salidas
   pinMode(generacionPwm.pin, OUTPUT);
   pinMode(seleccionDeCanal.pin, OUTPUT);
-
-  // Iniciar Pwm
-  analogWrite(generacionPwm.pin, generacionPwm.valor);
 }
 
 void loop() {
+  generarPwm();
   seleccionarCanal();
 
   switch (estado) {
@@ -52,6 +52,15 @@ void loop() {
   }
 }
 
+void generarPwm() {
+  long tActual = millis();
+  if (tActual - generacionPwm.millisUltimaEjecucion > generacionPwm.millisEspera) {
+    generacionPwm.millisUltimaEjecucion = tActual;
+    generacionPwm.estado = !generacionPwm.estado;
+    digitalWrite(generacionPwm.pin, generacionPwm.estado ? HIGH : LOW);
+  }
+}
+
 void seleccionarCanal() {
 
 }
@@ -67,3 +76,4 @@ void leer() {
 void mostrar() {
 
 }
+
