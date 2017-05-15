@@ -23,6 +23,15 @@ struct SeleccionDeCanal {
   bool estado = false;
 } seleccionDeCanal;
 
+// - Iniciar conversión
+
+struct InicioDeConversion {
+  int pin = 11;
+  int millisUltimaEjecucion = 0;
+  int millisEspera = 5;
+  bool estado = false;
+} inicioDeConversion;
+
 
 // Implementación
 
