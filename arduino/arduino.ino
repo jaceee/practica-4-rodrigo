@@ -62,7 +62,12 @@ void generarPwm() {
 }
 
 void seleccionarCanal() {
-
+  long tActual = millis();
+  if (tActual - seleccionDeCanal.millisUltimaEjecucion > seleccionDeCanal.millisEspera) {
+    seleccionDeCanal.millisUltimaEjecucion = tActual;
+    seleccionDeCanal.estado = !seleccionDeCanal.estado;
+    digitalWrite(seleccionDeCanal.pin, seleccionDeCanal.estado ? HIGH : LOW);
+  }
 }
 
 void iniciar() {
