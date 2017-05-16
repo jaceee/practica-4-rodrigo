@@ -8,7 +8,7 @@ int estado = 0;
 // - Generación PWM
 
 struct GeneracionPwm {
-  int pin = 12;
+  int  pin = 12;
   long millisUltimaEjecucion = 0;
   long millisEspera = 1;
   bool estado = false;
@@ -26,9 +26,9 @@ struct SeleccionDeCanal {
 // - Iniciar conversión
 
 struct InicioDeConversion {
-  int pin = 11;
-  int millisUltimaEjecucion = 0;
-  int millisEspera = 5;
+  int  pin = 11;
+  int  millisUltimaEjecucion = 0;
+  int  millisEspera = 1;
   bool estado = false;
 } inicioDeConversion;
 
@@ -37,6 +37,13 @@ struct InicioDeConversion {
 struct LecturaEOC {
   int pin = 13;
 } lecturaEOC;
+
+// - Datos
+
+struct Datos {
+  int  pines[8] = { 9, 8, 7, 6, 5, 4, 3, 2 };
+  byte valor = 0;
+} datos;
 
 
 // Implementación
@@ -47,6 +54,10 @@ void setup() {
   pinMode(seleccionDeCanal.pin, OUTPUT);
   pinMode(inicioDeConversion.pin, OUTPUT);
   pinMode(lecturaEOC.pin, INPUT);
+
+  for (int i = 0; i < 8; i++) {
+    pinMode(datos.pines[i], INPUT);
+  }
 }
 
 void loop() {
@@ -110,6 +121,16 @@ void esperarEOC() {
 }
 
 void leer() {
+  byte valor = 0;
+  for (int i = 0; i < 8; i++) {
+    if (digitalRead(datos.pines[i]) == HIGH) {
+      valor += (byte)(1 << i);
+    }
+  }
+  datos.valor = valor;
+
+  mostrar();
+  
   estado = 0;
 }
 
