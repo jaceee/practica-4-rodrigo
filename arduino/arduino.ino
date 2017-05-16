@@ -58,6 +58,8 @@ void setup() {
   for (int i = 0; i < 8; i++) {
     pinMode(datos.pines[i], INPUT);
   }
+
+  Serial.begin(9600);
 }
 
 void loop() {
@@ -93,6 +95,8 @@ void generarPwm() {
 void seleccionarCanal() {
   long tActual = millis();
   if (tActual - seleccionDeCanal.millisUltimaEjecucion > seleccionDeCanal.millisEspera) {
+    Serial.println("seleccionando canal");
+    
     seleccionDeCanal.millisUltimaEjecucion = tActual;
     seleccionDeCanal.estado = !seleccionDeCanal.estado;
     digitalWrite(seleccionDeCanal.pin, seleccionDeCanal.estado ? HIGH : LOW);
@@ -128,6 +132,14 @@ void leer() {
     }
   }
   datos.valor = valor;
+
+  char buff[5];
+
+  itoa(valor, buff, 10);
+
+  Serial.write("Valor: ");
+  Serial.write(buff);
+  Serial.println();
 
   mostrar();
   
