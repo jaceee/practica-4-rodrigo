@@ -1,4 +1,12 @@
 
+// Includes
+
+// SPI - Version: Latest 
+#include <SPI.h>
+
+#include "MAX7219.h"
+
+
 // Variables
 
 // - Estado global
@@ -8,7 +16,7 @@ int estado = 0;
 // - Generación PWM
 
 struct GeneracionPwm {
-  int  pin = 12;
+  int  pin = A2;
   long millisUltimaEjecucion = 0;
   long millisEspera = 1;
   bool estado = false;
@@ -17,7 +25,7 @@ struct GeneracionPwm {
 // - Selección de canal
 
 struct SeleccionDeCanal {
-  int  pin = 10;
+  int  pin = A1;
   long millisUltimaEjecucion = 0;
   long millisEspera = 6000;
   bool estado = false;
@@ -26,7 +34,7 @@ struct SeleccionDeCanal {
 // - Iniciar conversión
 
 struct InicioDeConversion {
-  int  pin = 11;
+  int  pin = A0;
   int  millisUltimaEjecucion = 0;
   int  millisEspera = 1;
   bool estado = false;
@@ -35,7 +43,7 @@ struct InicioDeConversion {
 // - Lectura EOC
 
 struct LecturaEOC {
-  int pin = 13;
+  int pin = A3;
 } lecturaEOC;
 
 // - Datos
@@ -44,6 +52,15 @@ struct Datos {
   int  pines[8] = { 9, 8, 7, 6, 5, 4, 3, 2 };
   byte valor = 0;
 } datos;
+
+// - MAX7219
+
+struct ConfPantalla {
+  int pin = 10;
+  int digitos = 8;
+} confPantalla;
+
+MAX7219 pantalla(confPantalla.pin, confPantalla.digitos);
 
 
 // Implementación
@@ -60,6 +77,15 @@ void setup() {
   }
 
   Serial.begin(9600);
+  
+  // MAX7219
+  SPI.begin();
+  pantalla.inicializar(); // SPI debe estar inicializado antes de inicializar el MAX7219 (que usa SPI)
+  pantalla.apagar();
+  pantalla.desactivar_modo_prueba();
+  pantalla.brillo(15); // Brillo medio (va desde cero hasta 15)
+  pantalla.borrar();
+  pantalla.encender();
 }
 
 void loop() {
@@ -147,11 +173,6 @@ void leer() {
 }
 
 void mostrar() {
-
+  pantalla.borrar();
+  pantalla.mostrar_cifra(datos.valor, 0, false);
 }
-
-byte decToBcd(byte val)
-{
-  return ((val/10*16) + (val%10));
-}
-
